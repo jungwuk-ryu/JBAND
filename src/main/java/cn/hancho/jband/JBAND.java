@@ -11,18 +11,12 @@ public class JBAND {
     private static final Logger LOGGER = Logger.getLogger(JBAND.class);
     private String clientId;
     private String accessToken;
-    private String token;
 
     public JBAND(){
     }
 
     public JBAND(String accessToken){
         this.setAccessToken(accessToken);
-    }
-
-    public JBAND(String accessToken, String token){
-        this.setAccessToken(accessToken);
-        this.setToken(token);
     }
 
     public User getProfile(){
@@ -59,16 +53,8 @@ public class JBAND {
         return new ArrayList<Band>();
     }
 
-    public String getToken(){
-        return this.token;
-    }
-
     public String getAccessToken() {
         return accessToken;
-    }
-
-    public void setToken(String token){
-        this.token = token;
     }
 
     public void setAccessToken(String accessToken) {
