@@ -8,7 +8,6 @@ import org.json.simple.JSONObject;
 import java.util.ArrayList;
 
 public class JBAND {
-    Class clazz;
     private static final Logger LOGGER = Logger.getLogger(JBAND.class);
     private String clientId;
     private String accessToken;
@@ -41,9 +40,8 @@ public class JBAND {
         api += "access_token=" + this.accessToken;
         if(bandKey != null && !bandKey.isEmpty()) api += "&band_key=" + bandKey;
         JSONObject jsonObj = requester.getRequest(api);
-        if(!jsonObj.get("result_code").equals("1")) return null;
-        System.out.println(jsonObj.get("result_data"));
-        User user = new User("이게 뭔데", "ㅠㅜㅜ");
+        if((long) jsonObj.get("result_code") != 1) return null;
+        User user = new User("n", "n");
         return user;
     }
 
