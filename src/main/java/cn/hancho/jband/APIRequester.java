@@ -10,9 +10,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Base64;
 
 public class APIRequester {
     public String accessToken;
+    private final static String USER_AGENT = "Mozilla/5.0";
     private final static String URL = "https://openapi.band.us/";
     private final static String OAUTH2_URL = "https://auth.band.us/oauth2/";
     private final MainLogger logger;
@@ -61,28 +63,29 @@ public class APIRequester {
         }
     }
 
-    public JSONObject postRequest(JSONObject jo, String api){
-        if(jo == null) return null;
+    public JSONObject postRequest(String api, @NonNull String parameters){
         if(this.accessToken == null){
             this.logger.error("Access Token is null", new NoAccessTokenException());
             return null;
         }
         try {
-            jo.put("access_token", this.accessToken);
-            String jsonStr = jo.toString();
             URL url = new URL(URL + api);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            String encodedAuth = Base64.getEncoder().encodeToString(this.accessToken.getBytes());
             con.setRequestMethod("POST");
-            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Authorization", "Basic " + encodedAuth);
             con.setRequestProperty("Accept-Charset", "UTF-8");
-            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("User-Agent", USER_AGENT);
+            con.setUseCaches(false);
             con.setDoInput(true);
             con.setDoOutput(true);
 
-            OutputStream os = con.getOutputStream();
-            os.write(jsonStr.getBytes("UTF-8"));
-            os.flush();
-            os.close();
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes("access_token=" + this.accessToken + parameters);
+            wr.flush();
+            wr.close();
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String il;
