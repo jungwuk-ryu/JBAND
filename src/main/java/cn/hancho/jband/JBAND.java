@@ -35,13 +35,23 @@ public class JBAND {
             LOGGER.error("accessToken is null");
             return null;
         }
+
         APIRequester requester = new APIRequester(LOGGER);
         String api = "v2/profile?";
+
         api += "access_token=" + this.accessToken;
         if(bandKey != null && !bandKey.isEmpty()) api += "&band_key=" + bandKey;
         JSONObject jsonObj = requester.getRequest(api);
-        if((long) jsonObj.get("result_code") != 1) return null;
-        User user = new User("n", "n");
+        if((long) jsonObj.get("result_code") != 1) {
+            LOGGER.error("result code : " + jsonObj.get("result_code"));
+            return null;
+        }
+
+        JSONObject bodyJsonObj = (JSONObject) jsonObj.get("result_data");
+        User user = new User((String) bodyJsonObj.get("name"), (String) bodyJsonObj.get("user_key"));
+        user.setProfileImageUrl((String) bodyJsonObj.get("profile_image_url"));
+        user.setIsAppMember((boolean) bodyJsonObj.get("is_app_member"));
+        user.setIsMessageAllowed((boolean) bodyJsonObj.get("message_allowed"));
         return user;
     }
 
