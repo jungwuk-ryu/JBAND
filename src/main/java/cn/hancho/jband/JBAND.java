@@ -2,21 +2,27 @@ package cn.hancho.jband;
 
 import cn.hancho.jband.entities.Band;
 import cn.hancho.jband.entities.User;
-import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
 public class JBAND {
-    private static final Logger LOGGER = Logger.getLogger(JBAND.class);
+    public MainLogger logger;
+
     private String clientId;
     private String accessToken;
 
     public JBAND(){
+        this.logger = new MainLogger();
     }
 
     public JBAND(String accessToken){
         this.setAccessToken(accessToken);
+        this.logger = new MainLogger();
+    }
+
+    public MainLogger getLogger(){
+        return this.logger;
     }
 
     public User getProfile(){
@@ -24,20 +30,19 @@ public class JBAND {
     }
 
     public User getProfile(String bandKey){
-        LOGGER.warn("starting");
         if(this.accessToken == null){
-            LOGGER.error("accessToken is null");
+            this.logger.error("accessToken is null");
             return null;
         }
 
-        APIRequester requester = new APIRequester(LOGGER);
+        APIRequester requester = new APIRequester(this.logger);
         String api = "v2/profile?";
 
         api += "access_token=" + this.accessToken;
         if(bandKey != null && !bandKey.isEmpty()) api += "&band_key=" + bandKey;
         JSONObject jsonObj = requester.getRequest(api);
         if((long) jsonObj.get("result_code") != 1) {
-            LOGGER.error("result code : " + jsonObj.get("result_code"));
+            this.logger.error("result code : " + jsonObj.get("result_code"));
             return null;
         }
 

@@ -15,9 +15,9 @@ import java.net.URL;
 public class APIRequester {
     private final static String URL = "https://openapi.band.us/";
     private final static String OAUTH2_URL = "https://auth.band.us/oauth2/";
-    private final Logger logger;
+    private final MainLogger logger;
 
-    public APIRequester(Logger logger){
+    public APIRequester(MainLogger logger){
         this.logger = logger;
     }
 
@@ -47,8 +47,7 @@ public class APIRequester {
             resultJsonObj = (JSONObject) parser.parse(resultJsonStr);
             return resultJsonObj;
         } catch (ParseException | IOException e) {
-            this.logger.info(e.getStackTrace());
-            e.printStackTrace();
+            this.logger.error(e.getStackTrace());
             return null;
         }
     }
