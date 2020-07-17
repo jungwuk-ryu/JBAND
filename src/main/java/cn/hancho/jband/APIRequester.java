@@ -1,6 +1,6 @@
 package cn.hancho.jband;
 
-import org.apache.log4j.Logger;
+import lombok.NonNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -13,19 +13,29 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class APIRequester {
+    public String accessToken;
     private final static String URL = "https://openapi.band.us/";
     private final static String OAUTH2_URL = "https://auth.band.us/oauth2/";
     private final MainLogger logger;
 
-    public APIRequester(MainLogger logger){
+    public APIRequester(MainLogger logger, String accessToken){
         this.logger = logger;
+        this.accessToken = accessToken;
     }
 
-    public JSONObject getRequest(String apiWithParameters) {
+    public JSONObject getRequest(String api){
+        return this.getRequest(api, "");
+    }
+
+    public JSONObject getRequest(String api, @NonNull String parameters) {
+        if(this.accessToken == null){
+            this.logger.error("Access Token is null", new NoAccessTokenException());
+            return null;
+        }
         URL url = null;
         JSONObject resultJsonObj = null;
         try {
-            url = new URL(URL + apiWithParameters);
+            url = new URL(URL + api + "?access_token=" + this.accessToken + parameters);
 
             HttpURLConnection con = null;
             con = (HttpURLConnection) url.openConnection();

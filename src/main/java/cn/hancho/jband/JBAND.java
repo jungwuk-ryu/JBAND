@@ -31,17 +31,11 @@ public class JBAND {
     }
 
     public User getProfile(String bandKey){
-        if(this.accessToken == null){
-            this.logger.error("Access Token is null");
-            return null;
-        }
-
-        APIRequester requester = new APIRequester(this.logger);
-        String api = "v2/profile?";
-
-        api += "access_token=" + this.accessToken;
-        if(bandKey != null && !bandKey.isEmpty()) api += "&band_key=" + bandKey;
-        JSONObject jsonObj = requester.getRequest(api);
+        APIRequester requester = new APIRequester(this.logger, this.accessToken);
+        String api = "v2/profile";
+        JSONObject jsonObj;
+        if(bandKey != null && !bandKey.isEmpty()) jsonObj = requester.getRequest(api, "&band_key=" + bandKey);
+        else jsonObj = requester.getRequest(api);
         if((long) jsonObj.get("result_code") != 1) {
             this.logger.error("result code : " + jsonObj.get("result_code"));
             return null;
@@ -56,12 +50,8 @@ public class JBAND {
     }
 
     public ArrayList<Band> getBandList(){
-        if(this.accessToken == null){
-            this.logger.error("Access Token is null");
-            return null;
-        }
-        APIRequester requester = new APIRequester(this.logger);
-        String api = "v2.1/bands?access_token=" + this.accessToken;
+        APIRequester requester = new APIRequester(this.logger, this.accessToken);
+        String api = "v2.1/bands";
         JSONObject jsonObj = requester.getRequest(api);
         if((long) jsonObj.get("result_code") != 1) {
             this.logger.error("result code : " + jsonObj.get("result_code"));
