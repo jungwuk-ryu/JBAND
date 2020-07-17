@@ -76,6 +76,8 @@ public class APIRequester {
             con.setRequestProperty("Accept", "application/json");
             con.setRequestProperty("Accept-Charset", "UTF-8");
             con.setRequestProperty("Content-Type", "application/json");
+            con.setDoInput(true);
+            con.setDoOutput(true);
 
             OutputStream os = con.getOutputStream();
             os.write(jsonStr.getBytes("UTF-8"));
