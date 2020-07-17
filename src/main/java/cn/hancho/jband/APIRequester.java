@@ -56,7 +56,7 @@ public class APIRequester {
             resultJsonObj = (JSONObject) parser.parse(resultJsonStr);
             return resultJsonObj;
         } catch (ParseException | IOException e) {
-            this.logger.error(e.getStackTrace());
+            this.logger.error("An error occurred while request API.", e);
             return null;
         }
     }
@@ -96,7 +96,7 @@ public class APIRequester {
             JSONObject resultJsonObj = (JSONObject) parser.parse(resultJsonStr);
             return resultJsonObj;
         } catch (IOException | ParseException e) {
-            this.logger.error(e.getStackTrace());
+            this.logger.error("An error occurred while request API.", e);
             return null;
         }
     }
