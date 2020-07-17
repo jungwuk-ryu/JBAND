@@ -2,6 +2,7 @@ package cn.hancho.jband;
 
 import cn.hancho.jband.entities.Band;
 import cn.hancho.jband.entities.User;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class JBAND {
 
     public User getProfile(String bandKey){
         if(this.accessToken == null){
-            this.logger.error("accessToken is null");
+            this.logger.error("Access Token is null");
             return null;
         }
 
@@ -55,7 +56,29 @@ public class JBAND {
     }
 
     public ArrayList<Band> getBandList(){
-        return new ArrayList<Band>();
+        if(this.accessToken == null){
+            this.logger.error("Access Token is null");
+            return null;
+        }
+        APIRequester requester = new APIRequester(this.logger);
+        String api = "v2.1/bands?access_token=" + this.accessToken;
+        JSONObject jsonObj = requester.getRequest(api);
+        if((long) jsonObj.get("result_code") != 1) {
+            this.logger.error("result code : " + jsonObj.get("result_code"));
+            return null;
+        }
+        ArrayList<Band> bands = new ArrayList<>();
+        JSONObject bodyJsonObj = (JSONObject) jsonObj.get("result_data");
+        JSONArray jsonArray = (JSONArray) bodyJsonObj.get("bands");
+        jsonArray.forEach((obj) -> {
+            JSONObject jsonBand = (JSONObject) obj;
+            Band band = new Band(this, (String) jsonBand.get("name")
+                    , (String) jsonBand.get("band_key")
+                    , (String) jsonBand.get("cover")
+                    , (long) jsonBand.get("member_count"));
+            bands.add(band);
+        });
+        return bands;
     }
 
     public String getAccessToken() {
