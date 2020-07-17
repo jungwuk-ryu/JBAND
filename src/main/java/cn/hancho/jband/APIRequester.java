@@ -64,6 +64,11 @@ public class APIRequester {
 
     public JSONObject postRequest(JSONObject jo, String api) throws IOException, ParseException {
         if(jo == null) return null;
+        if(this.accessToken == null){
+            this.logger.error("Access Token is null", new NoAccessTokenException());
+            return null;
+        }
+        jo.put("access_token", this.accessToken);
         String jsonStr = jo.toString();
         URL url = new URL(URL + api);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
