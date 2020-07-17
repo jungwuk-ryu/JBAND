@@ -5,11 +5,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 public class APIRequester {
@@ -62,39 +61,44 @@ public class APIRequester {
         }
     }
 
-    public JSONObject postRequest(JSONObject jo, String api) throws IOException, ParseException {
+    public JSONObject postRequest(JSONObject jo, String api){
         if(jo == null) return null;
         if(this.accessToken == null){
             this.logger.error("Access Token is null", new NoAccessTokenException());
             return null;
         }
-        jo.put("access_token", this.accessToken);
-        String jsonStr = jo.toString();
-        URL url = new URL(URL + api);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Accept", "application/json");
-        con.setRequestProperty("Accept-Charset", "UTF-8");
-        con.setRequestProperty("Content-Type", "application/json");
+        try {
+            jo.put("access_token", this.accessToken);
+            String jsonStr = jo.toString();
+            URL url = new URL(URL + api);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Accept-Charset", "UTF-8");
+            con.setRequestProperty("Content-Type", "application/json");
 
-        OutputStream os = con.getOutputStream();
-        os.write( jsonStr.getBytes("UTF-8") );
-        os.flush();
-        os.close();
+            OutputStream os = con.getOutputStream();
+            os.write(jsonStr.getBytes("UTF-8"));
+            os.flush();
+            os.close();
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String il;
-        StringBuilder resultJson = new StringBuilder();
-        while((il = bufferedReader.readLine()) != null){
-            resultJson.append(il);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String il;
+            StringBuilder resultJson = new StringBuilder();
+            while ((il = bufferedReader.readLine()) != null) {
+                resultJson.append(il);
+            }
+            bufferedReader.close();
+            con.disconnect();
+
+            String resultJsonStr = resultJson.toString();
+            JSONParser parser = new JSONParser();
+            JSONObject resultJsonObj = (JSONObject) parser.parse(resultJsonStr);
+            return resultJsonObj;
+        } catch (IOException | ParseException e) {
+            this.logger.error(e.getStackTrace());
+            return null;
         }
-        bufferedReader.close();
-        con.disconnect();
-
-        String resultJsonStr = resultJson.toString();
-        JSONParser parser = new JSONParser();
-        JSONObject resultJsonObj = (JSONObject) parser.parse(resultJsonStr);
-        return resultJsonObj;
     }
 
     public enum ErrorType{
