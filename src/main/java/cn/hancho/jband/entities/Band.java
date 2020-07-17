@@ -1,6 +1,11 @@
 package cn.hancho.jband.entities;
 
+import cn.hancho.jband.APIRequester;
 import cn.hancho.jband.JBAND;
+import org.json.simple.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class Band {
     private JBAND jband;
@@ -17,8 +22,38 @@ public class Band {
         this.memberCount = memberCount;
     }
 
-    public void writePost(){
+    /**
+     * <p>writePost with push notification</p>
+     * @return String post_key
+     */
+    public String writePost(String content){
+        return this.writePost(content, true);
+    }
 
+    /**
+     *
+     * @return String post_key
+     */
+    public String writePost(String content, boolean doPush){
+        APIRequester requester = new APIRequester(this.jband.getLogger(), this.jband.getAccessToken());
+        String parameters = "";
+        try {
+            parameters = "&band_key=" + this.bandKey
+                    + "&content=" + URLEncoder.encode(content,"UTF-8")
+                    + "&do_push=" + doPush;
+        } catch (UnsupportedEncodingException e) {
+            this.jband.getLogger().error("", e);
+            return null;
+        }
+
+        JSONObject resultJson = requester.postRequest("v2.2/band/post/create", parameters);
+        if((long) resultJson.get("result_code") != 1) {
+            this.jband.getLogger().error("result code : " + resultJson.get("result_code"));
+            return null;
+        }
+
+        JSONObject bodyJsonObj = (JSONObject) resultJson.get("result_data");
+        return (String) bodyJsonObj.get("post_key");
     }
 
     public void getPostList(){
@@ -93,4 +128,5 @@ public class Band {
     public void setMemberCount(long memberCount) {
         this.memberCount = memberCount;
     }
+
 }
