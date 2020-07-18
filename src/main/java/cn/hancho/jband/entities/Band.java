@@ -2,10 +2,10 @@ package cn.hancho.jband.entities;
 
 import cn.hancho.jband.APIRequester;
 import cn.hancho.jband.JBAND;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class Band {
     private JBAND jband;
@@ -13,6 +13,8 @@ public class Band {
     private String name;
     private String coverUrl;
     private long memberCount;
+
+    private ArrayList<Post> posts;
 
     public Band(JBAND jband, String name, String bandKey, String coverUrl, long memberCount){
         this.jband = jband;
@@ -38,8 +40,31 @@ public class Band {
         return this.jband.writePostDirect(this.bandKey, content, doPush);
     }
 
-    public void getPostList(){
+    public ArrayList<Post> getPostList(Locale locale){
+        APIRequester requester = new APIRequester(this.jband.getLogger(), this.jband.getAccessToken());
+        String parameters = "&band_key=" + this.bandKey + "&locale" + locale;
+        JSONObject main = requester.getRequest("v2/band/posts", parameters);
+        if((long) main.get("result_code") != 1) {
+            this.jband.getLogger().error("result code : " + main.get("result_code"));
+            return null;
+        }
+        JSONObject body = (JSONObject) main.get("result_data");
+        // TODO : Add Paging
+        JSONArray jsonPosts = (JSONArray) body.get("items");
+        ArrayList<Post> posts = null;
+        if(jsonPosts != null) {
+            posts = new ArrayList<>();
+            for (Object obj : jsonPosts) {
+                JSONObject jsonPost = (JSONObject) obj;
+                posts.add(new Post(jsonPost));
+            }
+        }
+        this.posts = posts;
+        return posts;
+    }
 
+    public ArrayList<Post> getPostsFromCache(){
+        return this.posts;
     }
 
     public void getPostDetail(){
@@ -109,6 +134,15 @@ public class Band {
 
     public void setMemberCount(long memberCount) {
         this.memberCount = memberCount;
+    }
+
+    public enum Locale{
+        ko_KR("ko_KR"),
+        en_US("en_US");
+
+        Locale(String locale) {
+
+        }
     }
 
 }
