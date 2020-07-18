@@ -5,6 +5,8 @@ import cn.hancho.jband.entities.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class JBAND {
@@ -24,6 +26,14 @@ public class JBAND {
 
     public MainLogger getLogger(){
         return this.logger;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public User getProfile(){
@@ -71,11 +81,25 @@ public class JBAND {
         return bands;
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
+    public String writePostDirect(String bandKey, String content, boolean doPush){
+        APIRequester requester = new APIRequester(this.getLogger(), this.getAccessToken());
+        String parameters = "";
+        try {
+            parameters = "&band_key=" + bandKey
+                    + "&content=" + URLEncoder.encode(content,"UTF-8")
+                    + "&do_push=" + doPush;
+        } catch (UnsupportedEncodingException e) {
+            this.getLogger().error("", e);
+            return null;
+        }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+        JSONObject resultJson = requester.postRequest("v2.2/band/post/create", parameters);
+        if((long) resultJson.get("result_code") != 1) {
+            this.getLogger().error("result code : " + resultJson.get("result_code"));
+            return null;
+        }
+
+        JSONObject bodyJsonObj = (JSONObject) resultJson.get("result_data");
+        return (String) bodyJsonObj.get("post_key");
     }
 }

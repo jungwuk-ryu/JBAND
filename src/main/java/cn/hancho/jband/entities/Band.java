@@ -35,25 +35,7 @@ public class Band {
      * @return String post_key
      */
     public String writePost(String content, boolean doPush){
-        APIRequester requester = new APIRequester(this.jband.getLogger(), this.jband.getAccessToken());
-        String parameters = "";
-        try {
-            parameters = "&band_key=" + this.bandKey
-                    + "&content=" + URLEncoder.encode(content,"UTF-8")
-                    + "&do_push=" + doPush;
-        } catch (UnsupportedEncodingException e) {
-            this.jband.getLogger().error("", e);
-            return null;
-        }
-
-        JSONObject resultJson = requester.postRequest("v2.2/band/post/create", parameters);
-        if((long) resultJson.get("result_code") != 1) {
-            this.jband.getLogger().error("result code : " + resultJson.get("result_code"));
-            return null;
-        }
-
-        JSONObject bodyJsonObj = (JSONObject) resultJson.get("result_data");
-        return (String) bodyJsonObj.get("post_key");
+        return this.jband.writePostDirect(this.bandKey, content, doPush);
     }
 
     public void getPostList(){
