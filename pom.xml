@@ -52,6 +52,42 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputFile>${project.build.directory}/${project.artifactId}-with-common-${project.version}.jar
+                    </outputFile>
+                    <minimizeJar>false</minimizeJar>
+                    <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
+                    <artifactSet>
+                        <includes>
+                            <include>commons-httpclient:commons-httpclient</include>
+                            <include>commons-logging:commons-logging</include>
+                            <include>commons-lang:commons-lang</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.apache.commons.logging</pattern>
+                            <shadedPattern>madvirus.relocated.commons.logging</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.apache.commons.httpclient</pattern>
+                            <shadedPattern>madvirus.relocated.commons.httpclient</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

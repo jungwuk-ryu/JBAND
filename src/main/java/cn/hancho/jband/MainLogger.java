@@ -1,9 +1,10 @@
 package cn.hancho.jband;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MainLogger {
-    public static final Logger LOGGER = Logger.getLogger(MainLogger.class);
+    public static final Logger LOGGER = LogManager.getLogger(MainLogger.class);
 
     public MainLogger(){
 
