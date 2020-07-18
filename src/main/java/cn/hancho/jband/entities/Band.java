@@ -40,9 +40,16 @@ public class Band {
         return this.jband.writePostDirect(this.bandKey, content, doPush);
     }
 
-    public ArrayList<Post> getPostList(Locale locale){
+    public PostList getPostList(Locale locale){
+        return this.getPostList(locale,null,"20");
+    }
+
+    public PostList getPostList(Locale locale, String currentPage, String limit){
         APIRequester requester = new APIRequester(this.jband.getLogger(), this.jband.getAccessToken());
         String parameters = "&band_key=" + this.bandKey + "&locale" + locale;
+        if(currentPage != null && !currentPage.isEmpty()){
+            parameters += "&after=" + currentPage + "&limit=" + limit;
+        }
         JSONObject main = requester.getRequest("v2/band/posts", parameters);
         if((long) main.get("result_code") != 1) {
             this.jband.getLogger().error("result code : " + main.get("result_code"));
@@ -60,7 +67,16 @@ public class Band {
             }
         }
         this.posts = posts;
-        return posts;
+
+        JSONObject jsonPaging = (JSONObject) body.get("paging");
+        JSONObject jsonNextParams = (JSONObject) jsonPaging.get("next_params");
+        String nextPage = (String) jsonNextParams.get("after");
+        String previousPage = "no_previous_params";
+        String newLimit = "20";
+        if(jsonNextParams.get("limit") != null) {
+            newLimit = (String) jsonNextParams.get("limit");
+        }
+        return new PostList(this, posts, nextPage, previousPage, locale, newLimit);
     }
 
     public ArrayList<Post> getPostsFromCache(){
