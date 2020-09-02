@@ -1,4 +1,4 @@
-package cn.hancho.jband.entities;
+package com.hancho.jband.entities;
 
 import org.json.simple.JSONObject;
 

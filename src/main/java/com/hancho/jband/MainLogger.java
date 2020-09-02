@@ -1,4 +1,4 @@
-package cn.hancho.jband;
+package com.hancho.jband;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,4 +1,4 @@
-package cn.hancho.jband.entities;
+package com.hancho.jband.entities;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Post {
     private String bandKey, postKey, content;
-    private long commentCount, emotionCount, createdAt;
+    private long commentCount, emotionCount, createdAt, view;
     private ArrayList<Comment> latestComments, comments;
     private ArrayList<Photo> photos;
     private User author;
@@ -19,6 +19,11 @@ public class Post {
         this.setCommentCount((long) jsonObject.get("comment_count"));
         this.setEmotionCount((long) jsonObject.get("emotion_count"));
         this.setCreatedAt((long) jsonObject.get("created_at"));
+        if(jsonObject.get("post_read_count") != null){
+            this.setView((Long) jsonObject.get("post_read_count"));
+        }else{
+            this.setView(-1);
+        }
 
         JSONObject jsonAuthor = (JSONObject) jsonObject.get("author");
         User author = null;
@@ -137,5 +142,13 @@ public class Post {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public long getView() {
+        return view;
+    }
+
+    public void setView(long view) {
+        this.view = view;
     }
 }

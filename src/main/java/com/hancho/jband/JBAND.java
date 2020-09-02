@@ -1,7 +1,7 @@
-package cn.hancho.jband;
+package com.hancho.jband;
 
-import cn.hancho.jband.entities.Band;
-import cn.hancho.jband.entities.User;
+import com.hancho.jband.entities.Band;
+import com.hancho.jband.entities.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

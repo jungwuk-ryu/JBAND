@@ -1,7 +1,7 @@
-package cn.hancho.jband.entities;
+package com.hancho.jband.entities;
 
-import cn.hancho.jband.APIRequester;
-import cn.hancho.jband.JBAND;
+import com.hancho.jband.APIRequester;
+import com.hancho.jband.JBAND;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

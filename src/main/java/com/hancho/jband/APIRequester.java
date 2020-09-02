@@ -1,4 +1,4 @@
-package cn.hancho.jband;
+package com.hancho.jband;
 
 import lombok.NonNull;
 import org.json.simple.JSONObject;
@@ -7,8 +7,6 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Base64;
 

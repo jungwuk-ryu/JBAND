@@ -1,4 +1,4 @@
-package cn.hancho.jband.entities;
+package com.hancho.jband.entities;
 
 public class Album {
     private String bandKey;
