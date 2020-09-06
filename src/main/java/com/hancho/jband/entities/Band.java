@@ -1,5 +1,6 @@
 package com.hancho.jband.entities;
 
+import com.hancho.jband.API;
 import com.hancho.jband.APIRequester;
 import com.hancho.jband.JBAND;
 import com.hancho.jband.MainLogger;
@@ -38,7 +39,7 @@ public class Band {
      * @return String post_key
      */
     public String writePost(String content, boolean doPush){
-        return this.jband.writePostDirect(this.bandKey, content, doPush);
+        return this.jband.api.writePost(this.bandKey, content, doPush);
     }
 
     public PostList getPostList(Locale locale){
@@ -46,38 +47,7 @@ public class Band {
     }
 
     public PostList getPostList(Locale locale, String currentPage, String limit){
-        APIRequester requester = new APIRequester();
-        String parameters = "&band_key=" + this.bandKey + "&locale" + locale;
-        if(currentPage != null && !currentPage.isEmpty()){
-            parameters += "&after=" + currentPage + "&limit=" + limit;
-        }
-        JSONObject main = requester.getRequest("v2/band/posts", parameters);
-        if((long) main.get("result_code") != 1) {
-            MainLogger.error("result code : " + main.get("result_code"));
-            return null;
-        }
-        JSONObject body = (JSONObject) main.get("result_data");
-        // TODO : Add Paging
-        JSONArray jsonPosts = (JSONArray) body.get("items");
-        ArrayList<Post> posts = null;
-        if(jsonPosts != null) {
-            posts = new ArrayList<>();
-            for (Object obj : jsonPosts) {
-                JSONObject jsonPost = (JSONObject) obj;
-                posts.add(new Post(jsonPost));
-            }
-        }
-        this.posts = posts;
-
-        JSONObject jsonPaging = (JSONObject) body.get("paging");
-        JSONObject jsonNextParams = (JSONObject) jsonPaging.get("next_params");
-        String nextPage = (String) jsonNextParams.get("after");
-        String previousPage = "no_previous_params";
-        String newLimit = "20";
-        if(jsonNextParams.get("limit") != null) {
-            newLimit = (String) jsonNextParams.get("limit");
-        }
-        return new PostList(this, posts, nextPage, previousPage, locale, newLimit);
+        return this.jband.api.getPostList(this, locale, currentPage, limit);
     }
 
     public ArrayList<Post> getPostsFromCache(){
@@ -151,6 +121,14 @@ public class Band {
 
     public void setMemberCount(long memberCount) {
         this.memberCount = memberCount;
+    }
+
+    public ArrayList<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(ArrayList<Post> posts) {
+        this.posts = posts;
     }
 
     public enum Locale{
