@@ -2,6 +2,7 @@ package com.hancho.jband.entities;
 
 import com.hancho.jband.APIRequester;
 import com.hancho.jband.JBAND;
+import com.hancho.jband.MainLogger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -45,14 +46,14 @@ public class Band {
     }
 
     public PostList getPostList(Locale locale, String currentPage, String limit){
-        APIRequester requester = new APIRequester(this.jband.getLogger(), this.jband.getAccessToken());
+        APIRequester requester = new APIRequester();
         String parameters = "&band_key=" + this.bandKey + "&locale" + locale;
         if(currentPage != null && !currentPage.isEmpty()){
             parameters += "&after=" + currentPage + "&limit=" + limit;
         }
         JSONObject main = requester.getRequest("v2/band/posts", parameters);
         if((long) main.get("result_code") != 1) {
-            this.jband.getLogger().error("result code : " + main.get("result_code"));
+            MainLogger.error("result code : " + main.get("result_code"));
             return null;
         }
         JSONObject body = (JSONObject) main.get("result_data");

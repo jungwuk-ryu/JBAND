@@ -10,16 +10,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
+import static com.hancho.jband.JBAND.ACCESS_TOKEN;
+
 public class APIRequester {
-    public String accessToken;
     private final static String USER_AGENT = "Mozilla/5.0";
     private final static String URL = "https://openapi.band.us/";
     private final static String OAUTH2_URL = "https://auth.band.us/oauth2/";
-    private final MainLogger logger;
 
-    public APIRequester(MainLogger logger, String accessToken){
-        this.logger = logger;
-        this.accessToken = accessToken;
+    public APIRequester(){
     }
 
     public JSONObject getRequest(String api){
@@ -27,14 +25,14 @@ public class APIRequester {
     }
 
     public JSONObject getRequest(String api, @NonNull String parameters) {
-        if(this.accessToken == null){
-            this.logger.error("Access Token is null", new NoAccessTokenException());
+        if(ACCESS_TOKEN == null){
+            MainLogger.error("Access Token is null", new NoAccessTokenException());
             return null;
         }
         URL url = null;
         JSONObject resultJsonObj = null;
         try {
-            url = new URL(URL + api + "?access_token=" + this.accessToken + parameters);
+            url = new URL(URL + api + "?access_token=" + ACCESS_TOKEN + parameters);
 
             HttpURLConnection con = null;
             con = (HttpURLConnection) url.openConnection();
@@ -56,20 +54,20 @@ public class APIRequester {
             resultJsonObj = (JSONObject) parser.parse(resultJsonStr);
             return resultJsonObj;
         } catch (ParseException | IOException e) {
-            this.logger.error("An error occurred while request API.", e);
+            MainLogger.error("An error occurred while request API.", e);
             return null;
         }
     }
 
     public JSONObject postRequest(String api, @NonNull String parameters){
-        if(this.accessToken == null){
-            this.logger.error("Access Token is null", new NoAccessTokenException());
+        if(ACCESS_TOKEN == null){
+            MainLogger.error("Access Token is null", new NoAccessTokenException());
             return null;
         }
         try {
             URL url = new URL(URL + api);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            String encodedAuth = Base64.getEncoder().encodeToString(this.accessToken.getBytes());
+            String encodedAuth = Base64.getEncoder().encodeToString(ACCESS_TOKEN.getBytes());
             con.setRequestMethod("POST");
             con.setRequestProperty("Authorization", "Basic " + encodedAuth);
             con.setRequestProperty("Accept-Charset", "UTF-8");
@@ -81,7 +79,7 @@ public class APIRequester {
             con.setDoOutput(true);
 
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes("access_token=" + this.accessToken + parameters);
+            wr.writeBytes("access_token=" + ACCESS_TOKEN + parameters);
             wr.flush();
             wr.close();
 
@@ -99,7 +97,7 @@ public class APIRequester {
             JSONObject resultJsonObj = (JSONObject) parser.parse(resultJsonStr);
             return resultJsonObj;
         } catch (IOException | ParseException e) {
-            this.logger.error("An error occurred while request API.", e);
+            MainLogger.error("An error occurred while request API.", e);
             return null;
         }
     }

@@ -10,30 +10,23 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class JBAND {
-    public MainLogger logger;
+    public static String ACCESS_TOKEN;
 
     private String clientId;
-    private String accessToken;
 
     public JBAND(){
-        this.logger = new MainLogger();
     }
 
-    public JBAND(String accessToken){
-        this.setAccessToken(accessToken);
-        this.logger = new MainLogger();
-    }
-
-    public MainLogger getLogger(){
-        return this.logger;
+    public JBAND(String ACCESS_TOKEN){
+        this.setAccessToken(ACCESS_TOKEN);
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return ACCESS_TOKEN;
     }
 
     public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+        ACCESS_TOKEN = accessToken;
     }
 
     public User getProfile(){
@@ -41,13 +34,13 @@ public class JBAND {
     }
 
     public User getProfile(String bandKey){
-        APIRequester requester = new APIRequester(this.logger, this.accessToken);
+        APIRequester requester = new APIRequester();
         String api = "v2/profile";
         JSONObject jsonObj;
         if(bandKey != null && !bandKey.isEmpty()) jsonObj = requester.getRequest(api, "&band_key=" + bandKey);
         else jsonObj = requester.getRequest(api);
         if((long) jsonObj.get("result_code") != 1) {
-            this.logger.error("result code : " + jsonObj.get("result_code"));
+            MainLogger.error("result code : " + jsonObj.get("result_code"));
             return null;
         }
 
@@ -60,11 +53,11 @@ public class JBAND {
     }
 
     public ArrayList<Band> getBandList(){
-        APIRequester requester = new APIRequester(this.logger, this.accessToken);
+        APIRequester requester = new APIRequester();
         String api = "v2.1/bands";
         JSONObject jsonObj = requester.getRequest(api);
         if((long) jsonObj.get("result_code") != 1) {
-            this.logger.error("result code : " + jsonObj.get("result_code"));
+            MainLogger.error("result code : " + jsonObj.get("result_code"));
             return null;
         }
         ArrayList<Band> bands = new ArrayList<>();
@@ -82,20 +75,20 @@ public class JBAND {
     }
 
     public String writePostDirect(String bandKey, String content, boolean doPush){
-        APIRequester requester = new APIRequester(this.getLogger(), this.getAccessToken());
+        APIRequester requester = new APIRequester();
         String parameters = "";
         try {
             parameters = "&band_key=" + bandKey
                     + "&content=" + URLEncoder.encode(content,"UTF-8")
                     + "&do_push=" + doPush;
         } catch (UnsupportedEncodingException e) {
-            this.getLogger().error("", e);
+            MainLogger.error("", e);
             return null;
         }
 
         JSONObject resultJson = requester.postRequest("v2.2/band/post/create", parameters);
         if((long) resultJson.get("result_code") != 1) {
-            this.getLogger().error("result code : " + resultJson.get("result_code"));
+            MainLogger.error("result code : " + resultJson.get("result_code"));
             return null;
         }
 
