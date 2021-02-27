@@ -5,7 +5,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -17,15 +20,15 @@ public class APIRequester {
     private final static String URL = "https://openapi.band.us/";
     private final static String OAUTH2_URL = "https://auth.band.us/oauth2/";
 
-    public APIRequester(){
+    public APIRequester() {
     }
 
-    public JSONObject getRequest(String api){
+    public JSONObject getRequest(String api) {
         return this.getRequest(api, "");
     }
 
     public JSONObject getRequest(String api, @NonNull String parameters) {
-        if(ACCESS_TOKEN == null){
+        if (ACCESS_TOKEN == null) {
             MainLogger.error("Access Token is null", new NoAccessTokenException());
             return null;
         }
@@ -43,7 +46,7 @@ public class APIRequester {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String il;
             StringBuilder resultJson = new StringBuilder();
-            while((il = bufferedReader.readLine()) != null){
+            while ((il = bufferedReader.readLine()) != null) {
                 resultJson.append(il);
             }
             bufferedReader.close();
@@ -59,8 +62,8 @@ public class APIRequester {
         }
     }
 
-    public JSONObject postRequest(String api, @NonNull String parameters){
-        if(ACCESS_TOKEN == null){
+    public JSONObject postRequest(String api, @NonNull String parameters) {
+        if (ACCESS_TOKEN == null) {
             MainLogger.error("Access Token is null", new NoAccessTokenException());
             return null;
         }
@@ -102,7 +105,7 @@ public class APIRequester {
         }
     }
 
-    public enum ErrorType{
+    public enum ErrorType {
 
         INVALID_PARAMETERS(211),
 
@@ -160,7 +163,7 @@ public class APIRequester {
         ALBUM_NOT_EXISTS(60801);
 
 
-        ErrorType(int errorCode){
+        ErrorType(int errorCode) {
 
         }
     }

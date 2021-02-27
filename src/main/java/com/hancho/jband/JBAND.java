@@ -11,12 +11,12 @@ public class JBAND {
 
     private String clientId;
 
-    public JBAND(){
+    public JBAND() {
         INSTANCE = this;
         this.api = new API(this);
     }
 
-    public JBAND(String ACCESS_TOKEN){
+    public JBAND(String ACCESS_TOKEN) {
         this();
         this.setAccessToken(ACCESS_TOKEN);
     }
@@ -29,11 +29,11 @@ public class JBAND {
         ACCESS_TOKEN = accessToken;
     }
 
-    public API getApi(){
+    public API getApi() {
         return api;
     }
 
-    public ArrayList<Band> getBandList(){
+    public ArrayList<Band> getBandList() {
         return this.api.getBandList();
     }
 }

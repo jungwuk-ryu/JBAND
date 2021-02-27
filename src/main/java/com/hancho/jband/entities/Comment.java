@@ -11,7 +11,7 @@ public class Comment {
     private long createdAt;
     private String content;
 
-    public Comment(JSONObject jsonObject){
+    public Comment(JSONObject jsonObject) {
         this.setAuthor(new User((JSONObject) jsonObject.get("author")));
         this.setContent((String) jsonObject.get("body"));
         this.setCreatedAt((Long) jsonObject.get("created_at"));

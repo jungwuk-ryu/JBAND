@@ -15,12 +15,12 @@ public class User {
     private boolean isAppMember;
     private boolean messageAllowed;
 
-    public User(String name, String userKey){
+    public User(String name, String userKey) {
         this.setName(name);
         this.setUserKey(userKey);
     }
 
-    public User(JSONObject jsonObject){
+    public User(JSONObject jsonObject) {
         this.setName((String) jsonObject.get("name"));
         this.setUserKey((String) jsonObject.get("user_key"));
         this.setDescription((String) jsonObject.get("description"));

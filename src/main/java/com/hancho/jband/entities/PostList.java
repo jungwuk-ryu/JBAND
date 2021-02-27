@@ -10,7 +10,7 @@ public class PostList {
     public String nextPage, previousPage, limit;
     public Band.Locale locale;
 
-    public PostList(Band band, ArrayList<Post> posts, String nextPage, String previousPage, Band.Locale locale, String limit){
+    public PostList(Band band, ArrayList<Post> posts, String nextPage, String previousPage, Band.Locale locale, String limit) {
         this.band = band;
         this.posts = posts;
         this.nextPage = nextPage;
@@ -19,32 +19,32 @@ public class PostList {
         this.limit = limit;
     }
 
-    public ArrayList<Post> getPosts(){
+    public ArrayList<Post> getPosts() {
         return this.posts;
     }
 
-    public boolean isFirstPage(){
+    public boolean isFirstPage() {
         return this.previousPage.equals("no_previous_params");
     }
 
-    public PostList getPreviousPage(){
+    public PostList getPreviousPage() {
         return this.getPreviousPage(this.locale);
     }
 
-    public PostList getPreviousPage(Band.Locale locale){
-        if(this.isFirstPage()) {
+    public PostList getPreviousPage(Band.Locale locale) {
+        if (this.isFirstPage()) {
             MainLogger.warn("This page is the first page. Cannot get previous page!");
             return null;
         }
         return this.band.getPostList(locale, this.previousPage, this.limit);
     }
 
-    public PostList getNextPage(){
+    public PostList getNextPage() {
         return this.getNextPage(this.locale);
     }
 
-    public PostList getNextPage(Band.Locale locale){
-        if(this.nextPage == null || this.nextPage.isEmpty()) {
+    public PostList getNextPage(Band.Locale locale) {
+        if (this.nextPage == null || this.nextPage.isEmpty()) {
             MainLogger.warn("The next page does not exist.");
             return null;
         }

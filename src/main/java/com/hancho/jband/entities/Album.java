@@ -9,7 +9,7 @@ public class Album {
     private String bandKey;
     private String albumKey;
 
-    public void getPhotos(){
+    public void getPhotos() {
 
     }
 }

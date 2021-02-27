@@ -12,17 +12,17 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class API {
-    public API(JBAND jband){
-        if(jband == null) throw new IllegalArgumentException("jband is not initialized");
+    public API(JBAND jband) {
+        if (jband == null) throw new IllegalArgumentException("jband is not initialized");
     }
 
-    public User getProfile(String bandKey){
+    public User getProfile(String bandKey) {
         APIRequester requester = new APIRequester();
         String api = "v2/profile";
         JSONObject jsonObj;
-        if(bandKey != null && !bandKey.isEmpty()) jsonObj = requester.getRequest(api, "&band_key=" + bandKey);
+        if (bandKey != null && !bandKey.isEmpty()) jsonObj = requester.getRequest(api, "&band_key=" + bandKey);
         else jsonObj = requester.getRequest(api);
-        if((long) jsonObj.get("result_code") != 1) {
+        if ((long) jsonObj.get("result_code") != 1) {
             MainLogger.error("result code : " + jsonObj.get("result_code"));
             return null;
         }
@@ -35,14 +35,14 @@ public class API {
         return user;
     }
 
-    public PostList getPostList(Band band, Band.Locale locale, String currentPage, String limit){
+    public PostList getPostList(Band band, Band.Locale locale, String currentPage, String limit) {
         APIRequester requester = new APIRequester();
         String parameters = "&band_key=" + band.getBandKey() + "&locale" + locale;
-        if(currentPage != null && !currentPage.isEmpty()){
+        if (currentPage != null && !currentPage.isEmpty()) {
             parameters += "&after=" + currentPage + "&limit=" + limit;
         }
         JSONObject main = requester.getRequest("v2/band/posts", parameters);
-        if((long) main.get("result_code") != 1) {
+        if ((long) main.get("result_code") != 1) {
             MainLogger.error("result code : " + main.get("result_code"));
             return null;
         }
@@ -50,7 +50,7 @@ public class API {
         // TODO : Add Paging
         JSONArray jsonPosts = (JSONArray) body.get("items");
         ArrayList<Post> posts = null;
-        if(jsonPosts != null) {
+        if (jsonPosts != null) {
             posts = new ArrayList<>();
             for (Object obj : jsonPosts) {
                 JSONObject jsonPost = (JSONObject) obj;
@@ -64,17 +64,17 @@ public class API {
         String nextPage = (String) jsonNextParams.get("after");
         String previousPage = "no_previous_params";
         String newLimit = "20";
-        if(jsonNextParams.get("limit") != null) {
+        if (jsonNextParams.get("limit") != null) {
             newLimit = (String) jsonNextParams.get("limit");
         }
         return new PostList(band, posts, nextPage, previousPage, locale, newLimit);
     }
 
-    public ArrayList<Band> getBandList(){
+    public ArrayList<Band> getBandList() {
         APIRequester requester = new APIRequester();
         String api = "v2.1/bands";
         JSONObject jsonObj = requester.getRequest(api);
-        if((long) jsonObj.get("result_code") != 1) {
+        if ((long) jsonObj.get("result_code") != 1) {
             MainLogger.error("result code : " + jsonObj.get("result_code"));
             return null;
         }
@@ -92,12 +92,12 @@ public class API {
         return bands;
     }
 
-    public String writePost(String bandKey, String content, boolean doPush){
+    public String writePost(String bandKey, String content, boolean doPush) {
         APIRequester requester = new APIRequester();
         String parameters = "";
         try {
             parameters = "&band_key=" + bandKey
-                    + "&content=" + URLEncoder.encode(content,"UTF-8")
+                    + "&content=" + URLEncoder.encode(content, "UTF-8")
                     + "&do_push=" + doPush;
         } catch (UnsupportedEncodingException e) {
             MainLogger.error("", e);
@@ -105,7 +105,7 @@ public class API {
         }
 
         JSONObject resultJson = requester.postRequest("v2.2/band/post/create", parameters);
-        if((long) resultJson.get("result_code") != 1) {
+        if ((long) resultJson.get("result_code") != 1) {
             MainLogger.error("result code : " + resultJson.get("result_code"));
             return null;
         }
