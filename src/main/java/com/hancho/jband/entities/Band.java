@@ -1,6 +1,6 @@
 package com.hancho.jband.entities;
 
-import com.hancho.jband.JBAND;
+import com.hancho.jband.Jband;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class Band {
-    private JBAND jband;
+    private Jband jband;
     private String bandKey;
     private String name;
     private String coverUrl;
@@ -17,7 +17,7 @@ public class Band {
 
     private ArrayList<Post> posts;
 
-    public Band(JBAND jband, String name, String bandKey, String coverUrl, long memberCount) {
+    public Band(Jband jband, String name, String bandKey, String coverUrl, long memberCount) {
         this.jband = jband;
         this.name = name;
         this.bandKey = bandKey;

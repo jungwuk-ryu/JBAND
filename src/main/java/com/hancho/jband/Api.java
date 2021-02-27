@@ -11,13 +11,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class API {
-    public API(JBAND jband) {
-        if (jband == null) throw new IllegalArgumentException("jband is not initialized");
+public class Api {
+    public Api(Jband jband) {
+        if (jband == null) throw new IllegalArgumentException();
     }
 
     public User getProfile(String bandKey) {
-        APIRequester requester = new APIRequester();
+        ApiRequester requester = new ApiRequester();
         String api = "v2/profile";
         JSONObject jsonObj;
         if (bandKey != null && !bandKey.isEmpty()) jsonObj = requester.getRequest(api, "&band_key=" + bandKey);
@@ -36,7 +36,7 @@ public class API {
     }
 
     public PostList getPostList(Band band, Band.Locale locale, String currentPage, String limit) {
-        APIRequester requester = new APIRequester();
+        ApiRequester requester = new ApiRequester();
         String parameters = "&band_key=" + band.getBandKey() + "&locale" + locale;
         if (currentPage != null && !currentPage.isEmpty()) {
             parameters += "&after=" + currentPage + "&limit=" + limit;
@@ -71,7 +71,7 @@ public class API {
     }
 
     public ArrayList<Band> getBandList() {
-        APIRequester requester = new APIRequester();
+        ApiRequester requester = new ApiRequester();
         String api = "v2.1/bands";
         JSONObject jsonObj = requester.getRequest(api);
         if ((long) jsonObj.get("result_code") != 1) {
@@ -83,7 +83,7 @@ public class API {
         JSONArray jsonArray = (JSONArray) bodyJsonObj.get("bands");
         jsonArray.forEach((obj) -> {
             JSONObject jsonBand = (JSONObject) obj;
-            Band band = new Band(JBAND.INSTANCE, (String) jsonBand.get("name")
+            Band band = new Band(Jband.INSTANCE, (String) jsonBand.get("name")
                     , (String) jsonBand.get("band_key")
                     , (String) jsonBand.get("cover")
                     , (long) jsonBand.get("member_count"));
@@ -93,7 +93,7 @@ public class API {
     }
 
     public String writePost(String bandKey, String content, boolean doPush) {
-        APIRequester requester = new APIRequester();
+        ApiRequester requester = new ApiRequester();
         String parameters = "";
         try {
             parameters = "&band_key=" + bandKey

@@ -4,21 +4,21 @@ import com.hancho.jband.entities.Band;
 
 import java.util.ArrayList;
 
-public class JBAND {
+public class Jband {
     public static String ACCESS_TOKEN;
-    public static JBAND INSTANCE;
-    public API api;
+    public static Jband INSTANCE;
+    public Api api;
 
     private String clientId;
 
-    public JBAND() {
+    public Jband() {
         INSTANCE = this;
-        this.api = new API(this);
+        this.api = new Api(this);
     }
 
-    public JBAND(String ACCESS_TOKEN) {
+    public Jband(String accessToken) {
         this();
-        this.setAccessToken(ACCESS_TOKEN);
+        this.setAccessToken(accessToken);
     }
 
     public String getAccessToken() {
@@ -29,7 +29,7 @@ public class JBAND {
         ACCESS_TOKEN = accessToken;
     }
 
-    public API getApi() {
+    public Api getApi() {
         return api;
     }
 

@@ -13,14 +13,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
-import static com.hancho.jband.JBAND.ACCESS_TOKEN;
+import static com.hancho.jband.Jband.ACCESS_TOKEN;
 
-public class APIRequester {
+public class ApiRequester {
     private final static String USER_AGENT = "Mozilla/5.0";
     private final static String URL = "https://openapi.band.us/";
     private final static String OAUTH2_URL = "https://auth.band.us/oauth2/";
 
-    public APIRequester() {
+    public ApiRequester() {
     }
 
     public JSONObject getRequest(String api) {
