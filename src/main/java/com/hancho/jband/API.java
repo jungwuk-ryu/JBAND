@@ -30,8 +30,8 @@ public class API {
         JSONObject bodyJsonObj = (JSONObject) jsonObj.get("result_data");
         User user = new User((String) bodyJsonObj.get("name"), (String) bodyJsonObj.get("user_key"));
         user.setProfileImageUrl((String) bodyJsonObj.get("profile_image_url"));
-        user.setIsAppMember((boolean) bodyJsonObj.get("is_app_member"));
-        user.setIsMessageAllowed((boolean) bodyJsonObj.get("message_allowed"));
+        user.setAppMember((boolean) bodyJsonObj.get("is_app_member"));
+        user.setMessageAllowed((boolean) bodyJsonObj.get("message_allowed"));
         return user;
     }
 

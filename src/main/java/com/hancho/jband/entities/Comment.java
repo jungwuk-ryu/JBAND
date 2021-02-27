@@ -1,7 +1,11 @@
 package com.hancho.jband.entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.simple.JSONObject;
 
+@Getter
+@Setter
 public class Comment {
     private User author;
     private long createdAt;
@@ -11,29 +15,5 @@ public class Comment {
         this.setAuthor(new User((JSONObject) jsonObject.get("author")));
         this.setContent((String) jsonObject.get("body"));
         this.setCreatedAt((Long) jsonObject.get("created_at"));
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 }

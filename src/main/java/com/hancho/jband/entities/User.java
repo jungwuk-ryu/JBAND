@@ -1,7 +1,11 @@
 package com.hancho.jband.entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.simple.JSONObject;
 
+@Getter
+@Setter
 public class User {
     private String userKey;
     private String profileImageUrl;
@@ -22,69 +26,5 @@ public class User {
         this.setDescription((String) jsonObject.get("description"));
         this.setRole((String) jsonObject.get("role"));
         this.setProfileImageUrl((String) jsonObject.get("profile_image_url"));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUserKey() {
-        return userKey;
-    }
-
-    public void setUserKey(String userKey) {
-        this.userKey = userKey;
-    }
-
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isAppMember() {
-        return isAppMember;
-    }
-
-    public void setIsAppMember(boolean appMember) {
-        isAppMember = appMember;
-    }
-
-    public boolean isMessageAllowed() {
-        return messageAllowed;
-    }
-
-    public void setIsMessageAllowed(boolean messageAllowed) {
-        this.messageAllowed = messageAllowed;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setAppMember(boolean appMember) {
-        isAppMember = appMember;
-    }
-
-    public void setMessageAllowed(boolean messageAllowed) {
-        this.messageAllowed = messageAllowed;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }

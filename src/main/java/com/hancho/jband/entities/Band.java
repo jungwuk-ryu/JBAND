@@ -4,11 +4,15 @@ import com.hancho.jband.API;
 import com.hancho.jband.APIRequester;
 import com.hancho.jband.JBAND;
 import com.hancho.jband.MainLogger;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
+@Getter
+@Setter
 public class Band {
     private JBAND jband;
     private String bandKey;
@@ -81,54 +85,6 @@ public class Band {
 
     public boolean canDelete(){
         return false;
-    }
-
-    public JBAND getJband() {
-        return jband;
-    }
-
-    public void setJband(JBAND jband) {
-        this.jband = jband;
-    }
-
-    public String getBandKey() {
-        return bandKey;
-    }
-
-    public void setBandKey(String bandKey) {
-        this.bandKey = bandKey;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public long getMemberCount() {
-        return memberCount;
-    }
-
-    public void setMemberCount(long memberCount) {
-        this.memberCount = memberCount;
-    }
-
-    public ArrayList<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(ArrayList<Post> posts) {
-        this.posts = posts;
     }
 
     public enum Locale{

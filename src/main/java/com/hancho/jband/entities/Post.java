@@ -1,10 +1,14 @@
 package com.hancho.jband.entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
+@Getter
+@Setter
 public class Post {
     private String bandKey, postKey, content;
     private long commentCount, emotionCount, createdAt, view;
@@ -66,89 +70,5 @@ public class Post {
 
     public void removeComment(){
 
-    }
-
-    public String getBandKey() {
-        return bandKey;
-    }
-
-    public void setBandKey(String bandKey) {
-        this.bandKey = bandKey;
-    }
-
-    public String getPostKey() {
-        return postKey;
-    }
-
-    public void setPostKey(String postKey) {
-        this.postKey = postKey;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public long getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(long commentCount) {
-        this.commentCount = commentCount;
-    }
-
-    public long getEmotionCount() {
-        return emotionCount;
-    }
-
-    public void setEmotionCount(long emotionCount) {
-        this.emotionCount = emotionCount;
-    }
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public ArrayList<Comment> getLatestComments() {
-        return latestComments;
-    }
-
-    public void setLatestComments(ArrayList<Comment> latestComments) {
-        this.latestComments = latestComments;
-    }
-
-    public void setComments(ArrayList<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public ArrayList<Photo> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(ArrayList<Photo> photos) {
-        this.photos = photos;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public long getView() {
-        return view;
-    }
-
-    public void setView(long view) {
-        this.view = view;
     }
 }

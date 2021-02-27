@@ -1,5 +1,7 @@
 package com.hancho.jband.entities;
 
+import com.hancho.jband.MainLogger;
+
 import java.util.ArrayList;
 
 public class PostList {
@@ -31,7 +33,7 @@ public class PostList {
 
     public PostList getPreviousPage(Band.Locale locale){
         if(this.isFirstPage()) {
-            this.band.getJband().getLogger().warn("This page is the first page. Cannot get previous page!");
+            MainLogger.warn("This page is the first page. Cannot get previous page!");
             return null;
         }
         return this.band.getPostList(locale, this.previousPage, this.limit);
@@ -43,7 +45,7 @@ public class PostList {
 
     public PostList getNextPage(Band.Locale locale){
         if(this.nextPage == null || this.nextPage.isEmpty()) {
-            this.band.getJband().getLogger().warn("The next page does not exist.");
+            MainLogger.warn("The next page does not exist.");
             return null;
         }
         return this.band.getPostList(locale, this.nextPage, this.limit);
