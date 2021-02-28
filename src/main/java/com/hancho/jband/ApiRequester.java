@@ -13,92 +13,95 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
-import static com.hancho.jband.Jband.ACCESS_TOKEN;
-
 public class ApiRequester {
     private final static String USER_AGENT = "Mozilla/5.0";
     private final static String URL = "https://openapi.band.us/";
     private final static String OAUTH2_URL = "https://auth.band.us/oauth2/";
 
-    public ApiRequester() {
+    private final String ACCESS_TOKEN;
+
+    public ApiRequester(String accessToken) {
+        this.ACCESS_TOKEN = accessToken;
     }
 
-    public JSONObject getRequest(String api) {
-        return this.getRequest(api, "");
+    public JSONObject requestGet(String api) {
+        return this.requestGet(api, "");
     }
 
-    public JSONObject getRequest(String api, @NonNull String parameters) {
+    public JSONObject requestGet(String api, @NonNull String parameters) {
         if (ACCESS_TOKEN == null) {
             MainLogger.error("Access Token is null", new NoAccessTokenException());
             return null;
         }
-        URL url = null;
-        JSONObject resultJsonObj = null;
+
         try {
-            url = new URL(URL + api + "?access_token=" + ACCESS_TOKEN + parameters);
+            URL url = new URL(URL + api + "?access_token=" + ACCESS_TOKEN + parameters);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-            HttpURLConnection con = null;
-            con = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept-Charset", "UTF-8");
+            connection.setRequestProperty("Accept", "application/json");
 
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Accept-Charset", "UTF-8");
-            con.setRequestProperty("Accept", "application/json");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String il;
-            StringBuilder resultJson = new StringBuilder();
-            while ((il = bufferedReader.readLine()) != null) {
-                resultJson.append(il);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
             }
             bufferedReader.close();
-            con.disconnect();
+            connection.disconnect();
 
-            String resultJsonStr = resultJson.toString();
+            String resultJson = stringBuilder.toString();
             JSONParser parser = new JSONParser();
-            resultJsonObj = (JSONObject) parser.parse(resultJsonStr);
-            return resultJsonObj;
+
+            return (JSONObject) parser.parse(resultJson);
         } catch (ParseException | IOException e) {
             MainLogger.error("An error occurred while request API.", e);
             return null;
         }
     }
 
-    public JSONObject postRequest(String api, @NonNull String parameters) {
+    public JSONObject requestPost(String api, @NonNull String parameters) {
         if (ACCESS_TOKEN == null) {
             MainLogger.error("Access Token is null", new NoAccessTokenException());
             return null;
         }
+
         try {
             URL url = new URL(URL + api);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            String encodedAuth = Base64.getEncoder().encodeToString(ACCESS_TOKEN.getBytes());
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Authorization", "Basic " + encodedAuth);
-            con.setRequestProperty("Accept-Charset", "UTF-8");
-            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("User-Agent", USER_AGENT);
-            con.setUseCaches(false);
-            con.setDoInput(true);
-            con.setDoOutput(true);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            String encodedToken = Base64.getEncoder().encodeToString(ACCESS_TOKEN.getBytes());
 
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Authorization", "Basic " + encodedToken);
+            connection.setRequestProperty("Accept-Charset", "UTF-8");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("User-Agent", USER_AGENT);
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
             wr.writeBytes("access_token=" + ACCESS_TOKEN + parameters);
             wr.flush();
             wr.close();
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String il;
-            StringBuilder resultJson = new StringBuilder();
-            while ((il = bufferedReader.readLine()) != null) {
-                resultJson.append(il);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
             }
             bufferedReader.close();
-            con.disconnect();
+            connection.disconnect();
 
-            String resultJsonStr = resultJson.toString();
+            String resultJsonStr = stringBuilder.toString();
             JSONParser parser = new JSONParser();
-            JSONObject resultJsonObj = (JSONObject) parser.parse(resultJsonStr);
-            return resultJsonObj;
+
+            return (JSONObject) parser.parse(resultJsonStr);
         } catch (IOException | ParseException e) {
             MainLogger.error("An error occurred while request API.", e);
             return null;

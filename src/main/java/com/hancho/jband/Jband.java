@@ -1,39 +1,20 @@
 package com.hancho.jband;
 
-import com.hancho.jband.entities.Band;
-
-import java.util.ArrayList;
-
 public class Jband {
-    public static String ACCESS_TOKEN;
-    public static Jband INSTANCE;
-    public Api api;
+    public Jband(){
 
-    private String clientId;
-
-    public Jband() {
-        INSTANCE = this;
-        this.api = new Api(this);
     }
 
-    public Jband(String accessToken) {
-        this();
-        this.setAccessToken(accessToken);
+    public static JbandClient createClient(String accessToken){
+        return new JbandClient(accessToken);
     }
 
-    public String getAccessToken() {
-        return ACCESS_TOKEN;
+    private static String requestAuthCode(){
+        return "";
     }
 
-    public void setAccessToken(String accessToken) {
-        ACCESS_TOKEN = accessToken;
+    private static String requestToken(){
+        return "";
     }
 
-    public Api getApi() {
-        return api;
-    }
-
-    public ArrayList<Band> getBandList() {
-        return this.api.getBandList();
-    }
 }

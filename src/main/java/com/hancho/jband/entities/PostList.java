@@ -27,11 +27,11 @@ public class PostList {
         return this.previousPage.equals("no_previous_params");
     }
 
-    public PostList getPreviousPage() {
+    public ResponseInfo<PostList> getPreviousPage() {
         return this.getPreviousPage(this.locale);
     }
 
-    public PostList getPreviousPage(Band.Locale locale) {
+    public ResponseInfo<PostList> getPreviousPage(Band.Locale locale) {
         if (this.isFirstPage()) {
             MainLogger.warn("This page is the first page. Cannot get previous page!");
             return null;
@@ -39,11 +39,11 @@ public class PostList {
         return this.band.getPostList(locale, this.previousPage, this.limit);
     }
 
-    public PostList getNextPage() {
+    public ResponseInfo<PostList> getNextPage() {
         return this.getNextPage(this.locale);
     }
 
-    public PostList getNextPage(Band.Locale locale) {
+    public ResponseInfo<PostList> getNextPage(Band.Locale locale) {
         if (this.nextPage == null || this.nextPage.isEmpty()) {
             MainLogger.warn("The next page does not exist.");
             return null;

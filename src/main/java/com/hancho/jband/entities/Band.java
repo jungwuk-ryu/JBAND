@@ -1,6 +1,6 @@
 package com.hancho.jband.entities;
 
-import com.hancho.jband.Jband;
+import com.hancho.jband.JbandClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class Band {
-    private Jband jband;
+    private JbandClient client;
     private String bandKey;
     private String name;
     private String coverUrl;
@@ -17,8 +17,8 @@ public class Band {
 
     private ArrayList<Post> posts;
 
-    public Band(Jband jband, String name, String bandKey, String coverUrl, long memberCount) {
-        this.jband = jband;
+    public Band(JbandClient jbandClient, String name, String bandKey, String coverUrl, long memberCount) {
+        this.client = jbandClient;
         this.name = name;
         this.bandKey = bandKey;
         this.coverUrl = coverUrl;
@@ -30,23 +30,23 @@ public class Band {
      *
      * @return String post_key
      */
-    public String writePost(String content) {
+    public ResponseInfo<String> writePost(String content) {
         return this.writePost(content, true);
     }
 
     /**
      * @return String post_key
      */
-    public String writePost(String content, boolean doPush) {
-        return this.jband.api.writePost(this.bandKey, content, doPush);
+    public ResponseInfo<String> writePost(String content, boolean doPush) {
+        return this.client.getBandApi().writePost(this.bandKey, content, doPush);
     }
 
-    public PostList getPostList(Locale locale) {
+    public ResponseInfo<PostList> getPostList(Locale locale) {
         return this.getPostList(locale, null, "20");
     }
 
-    public PostList getPostList(Locale locale, String currentPage, String limit) {
-        return this.jband.api.getPostList(this, locale, currentPage, limit);
+    public ResponseInfo<PostList> getPostList(Locale locale, String currentPage, String limit) {
+        return this.client.getBandApi().getPostList(this, locale, currentPage, limit);
     }
 
     public ArrayList<Post> getPostsFromCache() {
