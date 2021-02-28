@@ -3,6 +3,20 @@ JBAND is a Java wrapper for Naver [Band](https://band.us/).
 
 **JBAND is under developing.**
 
+# Usage
+```java
+JbandClient client = Jband.createClient("여기에 access token 입력");
+ResponseInfo<ArrayList<Band>> response = client.getBandList();
+
+if(response.isSuccess()){
+    ArrayList<Band> bandList = response.getResult();
+                
+    System.out.println(bandList.size() + "개의 밴드에 가입되어있습니다.");
+}else{
+    System.out.println(response.getResultCode());
+}
+```
+
 # TODO
 ---
 - [ ] 로그인
